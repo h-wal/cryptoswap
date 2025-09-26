@@ -18,7 +18,25 @@ const url =
   "&slippageBps=50"; 
 
 async function main() {
-  
+  try {
+
+    const quoteRes = await axios.get(url, { headers: { Accept: "application/json" } });
+    const quote = quoteRes.data;
+    console.log("Quote outAmount:", quote.outAmount);
+
+
+    const swapRes = await axios.post("https://quote-api.jup.ag/v6/swap", {
+      userPublicKey,
+      quoteResponse: quote,
+      wrapAndUnwrapSol: true,
+      dynamicComputeUnitLimit: true,
+      prioritizationFeeLamports: "auto",
+    });
+
+    console.log("Got swap tx from Jupiter");
+
+
+  }
 }
 
 main();
