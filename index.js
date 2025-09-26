@@ -8,11 +8,11 @@ const wallet = Keypair.fromSecretKey(secretKey);
 
 const userPublicKey = wallet.publicKey.toBase58();
 
-const url =
+const url = //data for getting quote
   "https://quote-api.jup.ag/v6/quote?" +
-  "inputMint=So11111111111111111111111111111111111111112" + 
-  "&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" + 
-  "&amount=100000" + 
+  "inputMint=So11111111111111111111111111111111111111112" +  //inputmint for solana
+  "&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" +  //output mint for usdc
+  "&amount=100000" + //no of lamports to transfer
   "&slippageBps=50"; 
 
 async function main() {
@@ -20,16 +20,16 @@ async function main() {
 
     const quoteRes = await axios.get(url, { headers: { Accept: "application/json" } });
     const quote = quoteRes.data;
-    console.log("Quote outAmount:", quote.outAmount);
+    console.log("Quote outAmount:", quote.outAmount); //get quote from jupiter
 
-
-    const swapRes = await axios.post("https://quote-api.jup.ag/v6/swap", {
+ 
+    const swapRes = await axios.post("https://quote-api.jup.ag/v6/swap", { //swapping it from jup exchange
       userPublicKey,
       quoteResponse: quote,
       wrapAndUnwrapSol: true,
       dynamicComputeUnitLimit: true,
       prioritizationFeeLamports: "auto",
-    });
+    }); 
 
     console.log("Got swap tx from Jupiter");
 
@@ -52,3 +52,6 @@ async function main() {
 }
 
 main();
+
+
+//this funciotn autmatically swaps the transaction please comment the swap part if you do not wish to swap as you get the quote 
