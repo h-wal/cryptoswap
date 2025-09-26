@@ -36,6 +36,20 @@ async function main() {
     console.log("Got swap tx from Jupiter");
 
 
+    const swapTransactionBuf = Buffer.from(swapRes.data.swapTransaction, "base64");
+    const transaction = VersionedTransaction.deserialize(swapTransactionBuf);
+
+
+    transaction.sign([wallet]);
+
+
+    const txid = await connection.sendTransaction(transaction, { skipPreflight: false });
+    console.log("✅ Sent tx:", txid);
+
+    await connection.confirmTransaction(txid);
+    console.log("✅ Swap confirmed!");
+  } catch (err) {
+    console.error("Error:", err.response?.data || err.message);
   }
 }
 
